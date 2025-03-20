@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# nms-visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A lightweight, React-based frontend for a **Network Monitoring System (NMS)**. This project provides an intuitive interface to manage credentials, configure network discovery, and monitor networked devices. Built with modern web technologies, it integrates seamlessly with a backend API to handle credential storage, device discovery, and real-time monitoring.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Features
 
-### `npm start`
+- **Credentials Management**  
+  Add, update, and delete credentials (username/password) with a responsive UI, synced with the backend database.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Network Discovery**  
+  Configure and run discovery tasks for network devices (IP addresses, ports, device types) with support for Linux, SNMP, and Windows environments.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Monitoring Dashboard**  
+  View and manage monitored objects with real-time status updates (Pending / Active), including provisioning options with customizable poll intervals.
 
-### `npm test`
+- **API Integration**  
+  Communicates with a backend server (e.g., `http://localhost:8080`) for CRUD operations and monitoring tasks.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Responsive Design**  
+  Built with Tailwind CSS for a clean, modern, and mobile-friendly user interface.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📸 Screenshots
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Dashboard View**
+  
+  ![Dashboard](https://cdn.jsdelivr.net/gh/Nishant5789/My_Tech_Notes@main/asset/nmslite_dashboard.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Discovery View**
+  
+  ![Discovery](https://cdn.jsdelivr.net/gh/Nishant5789/My_Tech_Notes@main/asset/nmslite_discovery.png)
 
-### `npm run eject`
+- **Credential Management**
+  
+  ![Credential](https://cdn.jsdelivr.net/gh/Nishant5789/My_Tech_Notes@main/asset/nmslite_credential.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Monitor View - 1**
+  
+  ![Monitor 1](https://cdn.jsdelivr.net/gh/Nishant5789/My_Tech_Notes@main/asset/nmslite_monitor_1.png)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Monitor View - 2**
+  
+  ![Monitor 2](https://cdn.jsdelivr.net/gh/Nishant5789/My_Tech_Notes@main/asset/nmslite_monitor_2.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🛠 Tech Stack
 
-## Learn More
+- **React** – Dynamic and interactive UI components
+- **Axios** – API requests handling
+- **React Router** – Client-side routing
+- **Tailwind CSS** – Styling and responsive layouts
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⚙️ Setup Instructions
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+git clone https://github.com/[your-username]/nms_frontendlite.git
+cd nms_frontendlite
+npm install
