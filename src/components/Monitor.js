@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useParams } from 'react-router-dom';
+
 const Monitor = () => {
     const { id } = useParams();
   const [systemData, setSystemData] = useState([]);
@@ -18,11 +19,18 @@ const Monitor = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/object/pollingdata/${id}`); // Replace with your API endpoint
+        const response = await fetch(`/api/object/pollingdata/${id}`); // Replace with your API endpoint
         const resData = await response.json();
 
-        const data = resData.map(item => ({...item.counters,  timestamp: item.timestamp}));
-
+        const data = resData.map(item => {
+          const formattedCounters = {};
+          for (const key in item.counters) {
+            const newKey = key.replace(/\./g, '_'); // Replace all dots with underscores
+            formattedCounters[newKey] = item.counters[key];
+          }
+          return { ...formattedCounters, timestamp: item.timestamp };
+        });
+        
         setSystemData(data);
         setMetrics(data.slice(-1)[0]); // Set the latest metrics
       } catch (error) {
@@ -31,7 +39,7 @@ const Monitor = () => {
     };
 
     fetchData(); // Initial fetch
-    const interval = setInterval(fetchData, 2000); // Fetch every 10 seconds
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
