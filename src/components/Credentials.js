@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CredentialPage = () => {
   const [credentials, setCredentials] = useState([]);
@@ -21,6 +23,7 @@ const CredentialPage = () => {
       setCredentials(response.data);
     } catch (error) {
       console.error('Error fetching credentials:', error);
+      toast.error('Failed to fetch credentials');
     }
   };
 
@@ -43,16 +46,23 @@ const CredentialPage = () => {
       if (editingId) {
         // Update flow
         await axios.put(`api/credentials/${editingId}`, payload);
+        toast.success('Credential updated successfully!');
       } else {
         // Add flow
         await axios.post('api/credentials/', payload);
+        toast.success('Credential added successfully!');
       }
 
       setNewCredential({ credential_name: '', username: '', password: '', system_type: 'linux' });
       setEditingId(null);
       fetchCredentials();
     } catch (error) {
-      console.error('Error saving credential:', error);
+      if (error.response?.data.statusMsg?.includes('this name is already used by another credential')) {
+        toast.warn(error.response.data.statusMsg);
+      } else {
+        console.error('Error adding/updating credential:', error);
+        toast.error(error.response?.data.statusMsg);
+      }
     }
   };
 
@@ -70,9 +80,14 @@ const CredentialPage = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`api/credentials/${id}`);
-      fetchCredentials();
+      toast.success('Credential deleted successfully!');
+      fetchCredentials(); // Refresh the list
     } catch (error) {
-      console.error('Error deleting credential:', error);
+      if (error.response?.data.statusMsg?.includes('credential is used by a provisioned object')) {
+        toast.warn('This credential is used by a provisioned object and cannot be deleted.');
+      } else {
+        toast.error(error.response?.data.statusMsg);
+      }
     }
   };
 
@@ -129,7 +144,6 @@ const CredentialPage = () => {
             {editingId ? 'Update' : 'Add'}
           </button>
 
-          {/* Optional Cancel Button */}
           {editingId && (
             <button
               type="button"
@@ -149,6 +163,7 @@ const CredentialPage = () => {
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
+            <th className="py-2 px-4 border">Credential Id</th>
             <th className="py-2 px-4 border">Credential Name</th>
             <th className="py-2 px-4 border">Username</th>
             <th className="py-2 px-4 border">Password</th>
@@ -160,7 +175,8 @@ const CredentialPage = () => {
           {credentials.map((cred) => {
             const parsedData = JSON.parse(cred.credential_data);
             return (
-              <tr key={cred.id} className="text-center">
+              <tr key={cred.credential_id} className="text-center">
+                <td className="py-2 px-4 border">{cred.credential_id}</td>
                 <td className="py-2 px-4 border">{cred.credential_name}</td>
                 <td className="py-2 px-4 border">{parsedData.username}</td>
                 <td className="py-2 px-4 border">{parsedData.password}</td>
@@ -173,7 +189,7 @@ const CredentialPage = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(cred.id)}
+                    onClick={() => handleDelete(cred.credential_id)}
                     className="bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Delete

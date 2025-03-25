@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const Discovery = () => {
@@ -33,13 +34,17 @@ const Discovery = () => {
     try {
       if (discoveryId) {
         await axios.put(`api/discovery/${discoveryId}`, data);
+        toast.success('Discovery updated successfully!', { autoClose: 2000 });
       } else {
         await axios.post('api/discovery/', data);
+        toast.success('Discovery added successfully!', { autoClose: 2000 });
       }
       fetchDiscovery();
       resetForm();
     } catch (err) {
-      console.error('Error:', err);
+      console.log(err);
+      
+      toast.error(err.response.data.statusMsg, { autoClose: 2000 });
     }
   };
 
@@ -54,10 +59,13 @@ const Discovery = () => {
     try {
       await axios.delete(`api/discovery/${id}`);
       fetchDiscovery();
+      toast.success('Discovery deleted successfully!', { autoClose: 2000 });
     } catch (err) {
       console.error('Delete error:', err);
+      toast.error('Failed to delete discovery', { autoClose: 2000 });
     }
   };
+
 
   const handleEdit = (item) => {
     setIp(item.ip);
@@ -68,26 +76,40 @@ const Discovery = () => {
 
   // ✅ Run Discovery Logic
   const handleRunDiscovery = async (id) => {
+    // Show loading toast and get its ID
+    const toastId = toast.loading('Discovery is running...');
+  
     try {
       // Run discovery
       await axios.post('api/discovery/run', {
         discovery_id: parseInt(id),
       });
-
-      // Fetch updated discovery
-      const res = await axios.get(`api/discovery/${id}`);
-
-      // Update that specific discovery status in the list
-      setDiscoveryList((prevList) =>
-        prevList.map((item) =>
-          item.discovery_id === id ? { ...item, discovery_status: res.data.discovery_status } : item
-        )
-      );
-    } catch (err) {
-      console.error('Run discovery error:', err);
+  
+      // Update the toast once successful
+      toast.update(toastId, { render: 'Discovery completed!', type: 'success', isLoading: false, autoClose: 2000 });
+  
+    } catch (error) {
+      // Handle failure and update toast
+      if (error.response?.data?.statusMsg?.includes('Discovery failed')) {
+        toast.update(toastId, { render: error.response.data.statusMsg, type: 'error', isLoading: false, autoClose: 5000 });
+      } else {
+        console.error('An error occurred while running the discovery:', error);
+        toast.update(toastId, { render: 'An error occurred while running the discovery.', type: 'error', isLoading: false, autoClose: 5000 });
+      }
     }
+  
+    // Fetch updated discovery
+    const res = await axios.get(`api/discovery/${id}`);
+  
+    // Update that specific discovery status in the list
+    setDiscoveryList((prevList) =>
+      prevList.map((item) =>
+        item.discovery_id === id ? { ...item, discovery_status: res.data.discovery_status } : item
+      )
+    );
   };
-
+  
+  
   return (
     <div className="p-8 mx-20">
       <h2 className="text-2xl font-bold mb-4">Discovery List</h2>

@@ -33,21 +33,21 @@ const Dashboard = () => {
         type: "discovery",
       }));
 
-      console.log(discoveryData);
-      
-  
+    console.log(discoveryData);
+
+
     const objectMap = new Map();
     objects.forEach((obj) => {
       objectMap.set(obj.ip, { ...obj, type: "object" });
     });
-  
+
     discoveryData = discoveryData.filter((disc) => !objectMap.has(disc.ip));
-  
+
     const merged = [...discoveryData, ...Array.from(objectMap.values())];
-  
+
     setMergedData(merged);
   };
-  
+
 
   // Handle provision button click
   const handleProvisionClick = (item) => {
@@ -61,7 +61,7 @@ const Dashboard = () => {
   const handleMonitor = (object_id) => {
     navigate(`/monitor/${object_id}`);
   };
-  
+
 
   const handleProvisionSubmit = async () => {
     try {
@@ -85,10 +85,21 @@ const Dashboard = () => {
     }
   };
 
+      // Add Delete Function
+      const handleDelete = async (object_id) => {
+        if (!object_id) return;
+        try {
+          await axios.delete(`api/object/${object_id}`);
+          await fetchData();  // Refresh the dashboard after deletion
+        } catch (error) {
+          console.error("Delete failed:", error);
+        }
+      };
+
   return (
     <div className="p-8 mx-20">
-      <h2 className="text-2xl font-bold mb-6">Merged Dashboard</h2>   
-         <table className="w-full border-collapse border">
+      <h2 className="text-2xl font-bold mb-6">Merged Dashboard</h2>
+      <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-200 text-xl font-semibold">
             <th className="p-4">IP</th>
@@ -124,9 +135,24 @@ const Dashboard = () => {
                     </button>
                   )
                 ) : (
-                  <button onClick={() => handleMonitor(item.object_id)} className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700" >
-                    Monitor
-                  </button>
+                  <>
+                    <button
+                      onClick={() => handleMonitor(item.object_id)}
+                      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                    >
+                      Monitor
+                    </button>
+
+                    {/* Show Delete button only if object_id exists */}
+                    {item.object_id && (
+                      <button
+                        onClick={() => handleDelete(item.object_id)}
+                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 ml-2"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </>
                 )}
               </td>
             </tr>
